@@ -41,9 +41,9 @@ template<class T>inline T abs(T a){return a>0?a:-a;}
 const int N=10010,INF=1e9;
 struct Big{
     #define mod 10000000LL // 7
-    //#define MN 100 // max digit = 100*7 
+    //#define MN 1000 // max digit = 1000*7 
     int s; //sign, if no sign need, take s===1 for all occurrence
-    vector<LL> p; // must sure p.size()*mod*mod < LL
+    vector<LL> p; // must sure p.size()*mod*mod < LL; 18-7*2=>10000
     Big(){zero();}
     Big(LL n) {
         if(n==0){zero();return;}
