@@ -25,8 +25,8 @@ head = '''\\usepackage[T1]{fontenc}
 \\begin{document}
 \\pagestyle{fancy}
 \\fancyfoot{}
-\\fancyfoot[R]{\\includegraphics[width=20pt]{taipei-hot.jpg}}
-\\fancyhead[L]{Taipei-Hot, National Taiwan University}
+\\fancyfoot[R]{\\includegraphics[width=50pt]{taipei-meow.png}}
+\\fancyhead[L]{Taipei-Meow, National Taiwan University}
 \\fancyhead[R]{\\thepage}
 \\renewcommand{\\headrulewidth}{0.4pt}
 \\renewcommand{\\contentsname}{Contents} 
