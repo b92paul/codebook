@@ -54,8 +54,7 @@ struct Big{
         bool f= s==-1;
         if(h() != A.h()) return (h()<A.h()) ^ f;
         for(int i=h()-1;i>=0;i--)
-            if(p[i] < A[i]) return true ^ f;
-            else if(p[i] > A[i]) return false ^ f;
+            if(p[i] != A[i]) return (p[i]<A[i]) ^ f;
         return false;
     }
     Big operator-(const Big &A)const {
@@ -74,9 +73,9 @@ struct Big{
     // for division
     void shift(int h) {
         p.resize(p.size() + h);
-        for(int i=p.size()-1; i>=h; i--)
-            p[i]=p[i-h];
-        for(int i=h-1;i>=0;i--)p[i]=0;
+        int i=p.size();
+        while(--i >= h)p[i]=p[i-h];
+        while(i>=0)p[i--]=0;
     }
     Big operator/(const Big &A)const {
         if(h() < A.h()) return Big();
@@ -85,12 +84,11 @@ struct Big{
         c.s=1;
         for(int i=h()-A.h();i>=0;i--) {
             Big tmp=A; tmp.shift(i); tmp.s=1;
-            
             int low=0,up=mod-1;
             while(low<=up) {
                 int mid=low+up>>1;
-                if(!(c<tmp*mid)) low=mid+1;
-                else up=mid-1;
+                if(c<tmp*mid) up=mid-1;
+                else low=mid+1;
             }
             c = c-tmp*up;
             ans.p.pb(up);
