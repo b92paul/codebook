@@ -67,6 +67,7 @@ struct Big{
             p[i]%=mod;
         }
         while(p.size()>1 && p.back()==0)p.pop_back();
+        if(p.back()==0)s=1;
     }
     Big operator*(const Big &A)const {
         Big tmp; tmp.initH(h()+A.h());
