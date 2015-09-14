@@ -7,33 +7,26 @@ struct Big{
     Big(){zero();}
     Big(LL n) {
         if(n==0){zero();return;}
-        s=n>0?1:-1;
-        n*=s;
-        while(n) {
-            p.pb(n%mod);
-            n/=mod;
-        }
+        s=n>0?1:-1; n*=s;
+        while(n) { p.pb(n%mod); n/=mod; }
     }
     void zero(){s=1;p.pb(0);}
     void initH(int h){p.resize(h);FOR(i,h)p[i]=0;}
     LL& operator[](const int &i){return p[i];}
     LL operator[](const int &i)const{return p[i];}
     inline int h()const{return p.size();}
-    inline void _flip(){s=-s;}
-    Big flip()const{Big a=*this;a._flip(); return a;}
+    Big flip()const{Big a=*this;a.s*=-1; return a;}
     void norm() {
         FOR(i,h())if(p[i] >= mod){
-            p[i+1]+=p[i]/mod;
-            p[i]%=mod;
+            p[i+1]+=p[i]/mod; p[i]%=mod;
         }
-        while(p.size()>1 && p.back()==0)p.pop_back();
+        while(p.size()>1&&p.back()==0)p.pop_back();
         if(p.back()==0)s=1;
     }
     Big operator*(const Big &A)const {
         Big tmp; tmp.initH(h()+A.h());
         FOR(i,h())FOR(j,A.h())tmp[i+j] += p[i]*A[j];
-        tmp.s = s*A.s;
-        tmp.norm();
+        tmp.s = s*A.s; tmp.norm();
         return tmp;
     }
     Big operator+(const Big &A)const {
@@ -44,8 +37,7 @@ struct Big{
         Big tmp; tmp.initH(max(h(),A.h())+1);
         FOR(i,h())tmp[i] += p[i];
         FOR(i,A.h())tmp[i] += A[i];
-        tmp.s = s;
-        tmp.norm();
+        tmp.s = s; tmp.norm();
         return tmp;
     }
     // for minus
@@ -54,7 +46,7 @@ struct Big{
         bool f= s==-1;
         if(h() != A.h()) return (h()<A.h()) ^ f;
         for(int i=h()-1;i>=0;i--)
-            if(p[i] != A[i]) return (p[i]<A[i]) ^ f;
+            if(p[i]!=A[i])return (p[i]<A[i]) ^ f;
         return false;
     }
     Big operator-(const Big &A)const {
@@ -94,8 +86,7 @@ struct Big{
             ans.p.pb(up);
         }
         reverse(ALL(ans.p));
-        ans.s=s*A.s;
-        ans.norm();
+        ans.s=s*A.s; ans.norm();
         return ans;
     }
     void print() {
