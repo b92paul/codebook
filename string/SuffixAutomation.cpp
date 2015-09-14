@@ -2,6 +2,8 @@
 // each node is effectively an end-set, there are at most 2L-1 nodes.
 // the end-set corresponding to a nodes parent is always its supet-set
 // primary edges form tree, (reversed) par link form a (different) tree.
+
+const int N = 1e6+10;
 class State {
 public:
     int len;
@@ -9,23 +11,19 @@ public:
     State(int _len=0):len(_len) {
         memset(go,0,sizeof(go));
     }
-    ~State() {
-        for(int i=0;i<26;i++)
-            if(go[i]&&go[i]->len==len+1)
-                delete go[i];
-    }
-};
+}Pool[2*N];
 
 class SuffixAutomation {
 public:
-    State root,*last;
+    State root,*last,* phead;
     SuffixAutomation() {init();}
     void init() {
+				phead = Pool;
         root.par=NULL; root.len=0;last=&root;
     }
     void extend(int w) {
         State *cp=last;
-        State *np=new State(cp->len+1);
+        State *np=new (phead++) State(cp->len+1);
         while(cp && cp->go[w]==NULL) {
             cp->go[w]=np;
             cp=cp->par;
@@ -36,7 +34,7 @@ public:
             if(cq->len==cp->len+1) {
                 np->par=cq;
             } else {
-                State *nq=new State(cp->len+1);
+                State *nq=new (phead++) State(cp->len+1);
                 memcpy(nq->go,cq->go,sizeof(cq->go));
                 nq->par=cq->par; cq->par=nq; np->par=nq;
                 while(cp && cp->go[w]==cq) {
