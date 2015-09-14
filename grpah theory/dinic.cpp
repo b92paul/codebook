@@ -1,45 +1,60 @@
-const int INF = 100000;
-int N, M, K;
-int map[105][105];
-int dist[105];
-// 1 ~ N: origianl
-// 0 : S, N + 1 T
-bool BFS() {
-	memset(dist, -1, sizeof(dist));
-	dist[0] = 0;
-	std::queue< int > Q;
-	Q.push(0);
-	while (!Q.empty()) {
-		int now = Q.front();
-		Q.pop();
-		for (int i = 0;i <= N + 1; ++i)
-			if (dist[i] == -1 && map[now][i]) {
-				Q.push(i);
-				dist[i] = dist[now] + 1;
-			}
-	}
-	return dist[N + 1] != -1;
-}
-int DFS(int node, int flow) {
-	if (node == N + 1) {
-		return flow;
-	}
-	int ret = 0;
-	for (int i = 0;i <= N + 1; ++i)
-		if(map[node][i] && dist[i] == dist[node] + 1) {
-			int bneck = min(flow, map[node][i]);
-			int tmp = DFS(i, bneck);
-			map[node][i] -= tmp;
-			map[i][node] += tmp;
-			flow -= tmp;
-			ret += tmp;
-		}
-	return ret;
-}
-int maxFlow() {
-	int totalFlow = 0;
-	while (BFS()) {
-		totalFlow += DFS(0, INF);
-	}
-	return totalFlow;
-}
+#define FN 5010 
+#define FM 500010
+#define INF 1023456789
+#define Cost int
+struct E {
+    int k; Cost c;
+    E(){}
+    E( int _k, Cost _c ):k(_k),c(_c){}
+} es[FM*2];
+
+struct Flow {
+    int n,m,dis[FN],ptr[FN];
+    int qq[FN],ql,qr;
+    VI e[FN];
+    void init( int _n ) {
+        n=_n; m=0;
+        FOR(i,n)e[i].clear();
+    }
+    void add(int a,int b, Cost c) {
+        e[a].pb(m);es[m++]=E(b,c);
+        e[b].pb(m);es[m++]=E(a,0);
+    }
+    bool BFS() {
+        FOR(i,n)dis[i]=-1;
+        ql=qr=0;
+        qq[qr++]=0;
+        dis[0]=0;
+        while ( ql!=qr && dis[n-1]==-1 ) {
+            int p=qq[ql++];
+            FOR(i,e[p].size()) {
+                E &ee=es[ e[p][i] ];
+                if ( ee.c<=0 || dis[ee.k]!=-1 ) continue;
+                dis[ qq[qr++]=ee.k ]=dis[p]+1;
+            }
+        }
+        return dis[n-1]!=-1;
+    }
+    Cost go( int p, Cost c ) {
+        if ( p==n-1 ) return c;
+        for(int &i=ptr[p];i<e[p].size();i++) {
+            E &ee=es[e[p][i]];
+            if ( ee.c<=0 || dis[p]+1!=dis[ee.k] ) continue;
+            Cost tmp=go(ee.k,min(c,ee.c));
+            if(tmp > 0){
+                ee.c-=tmp; es[e[p][i]^1].c+=tmp;
+                return tmp;
+            }
+        }
+        return 0;
+    }
+    Cost maxflow() {
+        Cost ret=0, tmp;
+        while ( BFS() ){
+            FOR(i,n)ptr[i]=0;
+            while( (tmp=go(0,INF)) > 0)
+                ret+=tmp;
+        }
+        return ret;
+    }
+} flow;
