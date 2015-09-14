@@ -46,6 +46,8 @@ print head
 for root, dirs, files in os.walk('..'):
   if root.find('.svn') >= 0:
     continue
+  if '.git' in root:
+    continue
   secname = os.path.basename(root)
   if secname.startswith('.'):
     continue
